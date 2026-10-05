@@ -1,7 +1,5 @@
-import React, { useState } from 'react';
 import { AnimatePresence } from 'framer-motion';
 import { AccessGate } from './features/auth/AccessGate';
-import { UATDashboard } from './features/uat/UATDashboard';
 import { ApprovalHub } from './features/approval/ApprovalHub';
 import { AdminPortal } from './features/admin/AdminPortal';
 import { DashboardLayout } from './components/layout/DashboardLayout';
@@ -14,7 +12,7 @@ function App() {
   const [currentScreen, setCurrentScreen] = useState<AppScreen>('GATE');
   const [activeMenu, setActiveMenu] = useState<UserMenu>('UAT');
   const [userEmail, setUserEmail] = useState('');
-  const [companyName, setCompanyName] = useState('');
+  const [companyName] = useState('');
 
   const handleGateComplete = (email: string) => {
     setUserEmail(email);
