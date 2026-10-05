@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { AnimatePresence } from 'framer-motion';
 import { AccessGate } from './features/auth/AccessGate';
 import { ApprovalHub } from './features/approval/ApprovalHub';

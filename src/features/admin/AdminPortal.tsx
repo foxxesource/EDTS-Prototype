@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import { Button } from '../../components/ui/Button';
 import { Card } from '../../components/ui/Card';
 import { Badge } from '../../components/ui/Badge';
-import { Plus, User, Activity, FileText, CheckCircle, LogOut, Send, MessageSquare, Eye, Download } from 'lucide-react';
+import { Plus, User, Activity, FileText, CheckCircle, LogOut, Send, Download } from 'lucide-react';
 import { mockDb } from '../../services/mockDb';
 
 // Sub-component for the Agreements Negotiation Center
