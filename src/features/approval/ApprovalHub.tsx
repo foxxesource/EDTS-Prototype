@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '../../components/ui/Button';
 import { Card } from '../../components/ui/Card';
 import { Badge } from '../../components/ui/Badge';
-import { CheckCircle2, FileText, ShieldCheck, PartyPopper, MessageSquare, Download, Upload, Send, Lock } from 'lucide-react';
+import { CheckCircle2, FileText, ShieldCheck, MessageSquare, Download, Upload, Send, Lock } from 'lucide-react';
 import { mockDb } from '../../services/mockDb';
 
 type ApprovalStep = 'REVIEWING' | 'SIGNING' | 'GRANTED';

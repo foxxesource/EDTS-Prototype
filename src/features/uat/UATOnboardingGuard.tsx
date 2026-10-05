@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { ApplicationForm } from '../application/ApplicationForm';
 import { CredentialsPage } from '../application/CredentialsPage';
 import { UATDashboard } from './UATDashboard';

@@ -3,9 +3,8 @@ import { motion } from 'framer-motion';
 import { Button } from '../../components/ui/Button';
 import { Card } from '../../components/ui/Card';
 import { Badge } from '../../components/ui/Badge';
-import { Plus, User, Activity, FileText, CheckCircle, LogOut, Send, Lock, Download } from 'lucide-react';
+import { Plus, User, Activity, FileText, CheckCircle, LogOut, Send, MessageSquare, Eye, Download } from 'lucide-react';
 import { mockDb } from '../../services/mockDb';
-import type { B2BUser } from '../../services/mockDb';
 
 // Sub-component for the Agreements Negotiation Center
 const NegotiationCenter = () => {
@@ -80,7 +79,7 @@ const NegotiationCenter = () => {
                     {hasUnread && <div className="w-2 h-2 bg-red-500 rounded-full" />}
                   </div>
                   <div className="flex justify-between items-center">
-                    <Badge variant={user.agreementStatus === 'UPLOADED' ? 'success' : 'secondary'} className="text-[10px] py-0 px-1.5">
+                    <Badge variant={user.agreementStatus === 'UPLOADED' ? 'success' : 'pending'} className="text-[10px] py-0 px-1.5">
                       {user.agreementStatus}
                     </Badge>
                     <span className="text-[10px] text-slate-400">v{user.agreementVersion}</span>
@@ -240,6 +239,7 @@ export const AdminPortal = ({ onLogout }: { onLogout: () => void }) => {
       },
       agreementVersion: 1,
       agreementDocUrl: docUrl,
+      negotiationHistory: [],
     });
     setNewUser({ email: '', companyName: '', applicationId: '', docFile: null });
     setIsCreatingUser(false);

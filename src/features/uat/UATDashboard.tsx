@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '../../components/ui/Button';
 import { Card } from '../../components/ui/Card';
 import { Badge } from '../../components/ui/Badge';
-import { CheckCircle2, PlayCircle, Terminal, ShieldCheck, BookOpen, X } from 'lucide-react';
+import { CheckCircle, PlayCircle, Terminal, ShieldCheck, BookOpen, X } from 'lucide-react';
 import { API_DOCS } from './uatApiSpecs';
 import { mockDb } from '../../services/mockDb';
 
