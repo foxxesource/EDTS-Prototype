@@ -1,0 +1,194 @@
+import React, { useState } from 'react';
+import { motion } from 'framer-motion';
+import { Button } from '../../components/ui/Button';
+import { Card } from '../../components/ui/Card';
+import { Badge } from '../../components/ui/Badge';
+import { Plus, User, Activity, CheckCircle, LogOut } from 'lucide-react';
+import { mockDb } from '../../services/mockDb';
+
+export const AdminPortal = ({ onLogout }: { onLogout: () => void }) => {
+  const [activeTab, setActiveTab] = useState<'users' | 'progress'>('users');
+  const [isCreatingUser, setIsCreatingUser] = useState(false);
+  const [newUser, setNewUser] = useState({ email: '', companyName: '', applicationId: '', docFile: null as File | null });
+
+  const handleCreateUser = (e: React.FormEvent) => {
+    e.preventDefault();
+    const docUrl = newUser.docFile ? `uploads/agreement_${newUser.email}.pdf` : 'default_agreement.pdf';
+    mockDb.createUser({
+      email: newUser.email,
+      companyName: newUser.companyName,
+      applicationId: newUser.applicationId,
+      uatProgress: [],
+      agreementStatus: 'AWAITING_SIGNATURE',
+      commercialTerms: {
+        rateLimit: '100 req/sec',
+        wholesaleMargin: '10%',
+        sla: '99.9%',
+      },
+      agreementVersion: 1,
+      agreementDocUrl: docUrl,
+      negotiationHistory: [],
+    });
+    setNewUser({ email: '', companyName: '', applicationId: '', docFile: null });
+    setIsCreatingUser(false);
+  };
+
+  const users = mockDb.getAllUsers();
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      className="max-w-7xl mx-auto"
+    >
+      <div className="flex justify-between items-center mb-8">
+        <div>
+          <h1 className="text-3xl font-bold text-slate-900">Admin Control Center</h1>
+          <p className="text-slate-500">Manage B2B users and monitor UAT progress</p>
+        </div>
+        <Button variant="secondary" onClick={onLogout} className="flex items-center gap-2">
+          <LogOut className="w-4 h-4" /> Logout
+        </Button>
+      </div>
+
+      <div className="flex gap-4 mb-6">
+        <Button
+          variant={activeTab === 'users' ? 'primary' : 'secondary'}
+          onClick={() => setActiveTab('users')}
+          className="flex items-center gap-2"
+        >
+          <User className="w-4 h-4" /> User Management
+        </Button>
+        <Button
+          variant={activeTab === 'progress' ? 'primary' : 'secondary'}
+          onClick={() => setActiveTab('progress')}
+          className="flex items-center gap-2"
+        >
+          <Activity className="w-4 h-4" /> UAT Tracking
+        </Button>
+      </div>
+
+      {activeTab === 'users' && (
+        <div className="space-y-6">
+          <div className="flex justify-end">
+            <Button onClick={() => setIsCreatingUser(true)} className="flex items-center gap-2">
+              <Plus className="w-4 h-4" /> Create B2B User
+            </Button>
+          </div>
+
+          {isCreatingUser && (
+            <Card className="p-6 max-w-md mx-auto animate-in fade-in zoom-in duration-200">
+              <h3 className="text-lg font-bold mb-4">New B2B User</h3>
+              <form onSubmit={handleCreateUser} className="space-y-4">
+                <div>
+                  <label className="block text-xs font-medium text-slate-500 mb-1">Email</label>
+                  <input
+                    className="w-full px-3 py-2 border rounded-lg outline-none focus:ring-2 focus:ring-blue-500"
+                    value={newUser.email}
+                    onChange={e => setNewUser({...newUser, email: e.target.value})}
+                    required
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-medium text-slate-500 mb-1">Company Name</label>
+                  <input
+                    className="w-full px-3 py-2 border rounded-lg outline-none focus:ring-2 focus:ring-blue-500"
+                    value={newUser.companyName}
+                    onChange={e => setNewUser({...newUser, companyName: e.target.value})}
+                    required
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-medium text-slate-500 mb-1">Application ID</label>
+                  <input
+                    className="w-full px-3 py-2 border rounded-lg outline-none focus:ring-2 focus:ring-blue-500"
+                    value={newUser.applicationId}
+                    onChange={e => setNewUser({...newUser, applicationId: e.target.value})}
+                    required
+                  />
+                </div>
+                <div className="space-y-1">
+                  <label className="block text-xs font-medium text-slate-500 mb-1">Commercial Agreement (PDF)</label>
+                  <input
+                    type="file"
+                    accept=".pdf"
+                    className="w-full text-xs text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
+                    onChange={e => setNewUser({...newUser, docFile: e.target.files?.[0] || null})}
+                    required
+                  />
+                </div>
+                <div className="flex gap-2 justify-end mt-6">
+                  <Button variant="secondary" onClick={() => setIsCreatingUser(false)}>Cancel</Button>
+                  <Button type="submit">Create User</Button>
+                </div>
+              </form>
+            </Card>
+          )}
+
+          <Card className="overflow-hidden">
+            <table className="w-full text-left text-sm">
+              <thead className="bg-slate-50 border-b border-slate-100 text-slate-500">
+                <tr>
+                  <th className="px-6 py-3">Company</th>
+                  <th className="px-6 py-3">Email</th>
+                  <th className="px-6 py-3">App ID</th>
+                  <th className="px-6 py-3">Status</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-slate-100">
+                {users.map(u => (
+                  <tr key={u.email} className="hover:bg-slate-50 transition-colors">
+                    <td className="px-6 py-4 font-medium">{u.companyName}</td>
+                    <td className="px-6 py-4 text-slate-600">{u.email}</td>
+                    <td className="px-6 py-4 font-mono text-xs">{u.applicationId}</td>
+                    <td className="px-6 py-4">
+                      <Badge variant={u.agreementStatus === 'APPROVED' ? 'success' : 'pending'}>
+                        {u.agreementStatus}
+                      </Badge>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </Card>
+        </div>
+      )}
+
+      {activeTab === 'progress' && (
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {users.map(u => (
+            <Card key={u.email} className="p-6">
+              <div className="flex justify-between items-start mb-4">
+                <div>
+                  <h3 className="font-bold text-slate-900">{u.companyName}</h3>
+                  <p className="text-xs text-slate-500">{u.email}</p>
+                </div>
+                <Badge variant={u.uatProgress.length === 4 ? 'success' : 'pending'}>
+                  {u.uatProgress.length}/4 Completed
+                </Badge>
+              </div>
+              <div className="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
+                <div
+                  className="bg-blue-600 h-full transition-all duration-500"
+                  style={{ width: `${(u.uatProgress.length / 4) * 100}%` }}
+                />
+              </div>
+              <div className="mt-4 flex gap-2 flex-wrap">
+                {[1,2,3,4].map(id => (
+                  <div
+                    key={id}
+                    className={`w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-bold ${
+                      u.uatProgress.includes(id) ? 'bg-emerald-100 text-emerald-700' : 'bg-slate-100 text-slate-400'
+                    }`}
+                  >
+                    {u.uatProgress.includes(id) ? <CheckCircle className="w-3 h-3" /> : id}
+                  </div>
+                ))}
+              </div>
+            </Card>
+          ))}
+        </div>
+      )}
+    </motion.div>
+  );
+};
